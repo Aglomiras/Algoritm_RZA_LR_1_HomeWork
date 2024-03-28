@@ -61,10 +61,11 @@ public class XCBR extends LN {
 
     @Override
     public void process() {
-        if (Pos.getStValAttribute().getValue().equals(DPC.stVal.OFF) && !BlkOpn.getStVal().getValue()) {
-
+        if (!Pos.getStValAttribute().getValue().equals(DPC.stVal.OFF) && !BlkOpn.getStVal().getValue()) {
+            Pos.getStValAttribute().setValue(DPC.stVal.OFF);
             BlkCls.getStVal().setValue(true);
         } else {
+            Pos.getStValAttribute().setValue(DPC.stVal.ON);
             BlkCls.getStVal().setValue(false);
         }
     }

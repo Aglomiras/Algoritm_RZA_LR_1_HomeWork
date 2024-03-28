@@ -76,6 +76,7 @@ public class Main {
         logicalNode.add(cswi);
 
         XCBR xcbr = new XCBR();
+
         logicalNode.add(xcbr);
 
         NHMI nhmi = new NHMI();
