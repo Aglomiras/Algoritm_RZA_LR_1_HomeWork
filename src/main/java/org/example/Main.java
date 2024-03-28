@@ -1,7 +1,12 @@
 package org.example;
 
 import org.example.iec61850.lodicalNodes.LN;
+import org.example.iec61850.lodicalNodes.hmi.NHMI;
+import org.example.iec61850.lodicalNodes.hmi.other.NHMISignal;
 import org.example.iec61850.lodicalNodes.measurement.MMXU;
+import org.example.iec61850.lodicalNodes.protection.PTOC;
+import org.example.iec61850.lodicalNodes.supervisory_control.CSWI;
+import org.example.iec61850.lodicalNodes.switchgear.XCBR;
 import org.example.iec61850.lodicalNodes.system_logic_nodes.LSVS;
 
 import java.util.ArrayList;
@@ -11,28 +16,78 @@ public class Main {
     private static final List<LN> logicalNode = new ArrayList<>();
     private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
 //    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Конец линии\\";
-    private static String name = "PhAB80";
-    /**Начало линии*/
+
+    /**
+     * Начало линии
+     */
+//    private static String name = "PhAB80";
 //    private static String name = "PhA80";
-//    private static String name = "PhB20";
+    private static String name = "PhB20";
 //    private static String name = "PhBC20";
 
-    /**Конец линии*/
+    /**
+     * Конец линии
+     */
 //    private static String name = "PhABC20";
 //    private static String name = "PhABC80";
 //    private static String name = "PhB80";
 //    private static String name = "PhC20";
     public static void main(String[] args) throws Exception {
         LSVS lsvs = new LSVS(); //Создаем узел LSVS
-        logicalNode.add(lsvs); //Добавляем узел в лист узлов
         lsvs.setPath(path);
         lsvs.setFileName(name);
+        logicalNode.add(lsvs); //Добавляем узел в лист узлов
 
         MMXU mmxu = new MMXU(); //Создаем узел MMXU
-        logicalNode.add(mmxu); //Добавляем узел в лист узлов
         mmxu.IaInst = lsvs.getOut().get(0);
         mmxu.IbInst = lsvs.getOut().get(1);
         mmxu.IcInst = lsvs.getOut().get(2);
+        logicalNode.add(mmxu); //Добавляем узел в лист узлов
+
+        /**I ступень*/
+        PTOC ptoc1 = new PTOC();
+        ptoc1.setA(mmxu.getA());
+        ptoc1.getStrVal().getSetMag().getFloatVal().setValue(2544.0); //Задание уставки по току
+        ptoc1.getOpDlOpTmms().getSetVal().setValue(0); //Задание выдержки времени
+        ptoc1.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
+        logicalNode.add(ptoc1);
+
+        /**II ступень*/
+        PTOC ptoc2 = new PTOC();
+        ptoc2.setA(mmxu.getA());
+        ptoc2.getStrVal().getSetMag().getFloatVal().setValue(770.0); //Задание уставки по току
+        ptoc2.getOpDlOpTmms().getSetVal().setValue(1); //Задание выдержки времени
+        ptoc2.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
+        logicalNode.add(ptoc2);
+
+        /**III ступень*/
+        PTOC ptoc3 = new PTOC();
+        ptoc3.setA(mmxu.getA());
+        ptoc3.getStrVal().getSetMag().getFloatVal().setValue(420.0); //Задание уставки по току
+        ptoc3.getOpDlOpTmms().getSetVal().setValue(2); //Задание выдержки времени
+        ptoc3.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
+        logicalNode.add(ptoc3);
+
+        CSWI cswi = new CSWI();
+        /**Добавляем информацию о сигнала на отключение оборудования от защит*/
+        cswi.getOpOpnList().add(ptoc1.getOp());
+        cswi.getOpOpnList().add(ptoc2.getOp());
+        cswi.getOpOpnList().add(ptoc3.getOp());
+        logicalNode.add(cswi);
+
+        XCBR xcbr = new XCBR();
+        logicalNode.add(xcbr);
+
+        NHMI nhmi = new NHMI();
+        nhmi.addSignals("SignalIA", new NHMISignal("ia", mmxu.IaInst.getInstMag().getFloatVal()));
+        nhmi.addSignals("SignalIB", new NHMISignal("ib", mmxu.IbInst.getInstMag().getFloatVal()));
+        nhmi.addSignals("SignalIC", new NHMISignal("ic", mmxu.IcInst.getInstMag().getFloatVal()));
+        logicalNode.add(nhmi);
+
+        while (lsvs.hasNext()) {
+            logicalNode.forEach(LN::process);
+            System.out.println();
+        }
 
     }
 }

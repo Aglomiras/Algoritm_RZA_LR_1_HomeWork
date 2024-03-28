@@ -78,7 +78,7 @@ public class LSVS extends LN {
 //            this.kBList.add(kB);
 //        }
         this.scvIterator = this.csvFileList.iterator();
-        if (hasNext()) {
+        if (this.scvIterator.hasNext()) {
             this.scvIterator.next();
         }
     }

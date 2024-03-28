@@ -20,7 +20,7 @@ public class DPC extends MyData {
     private Originator origin = new Originator();
     private Attribute<stVal> stValAttribute = new Attribute<>();
 
-    private enum stVal {
+    public enum stVal {
         INTERMEDIATE_STATE,
         OFF,
         ON,
@@ -40,7 +40,7 @@ public class DPC extends MyData {
     private Attribute<Boolean> subEna = new Attribute<>();
     private Attribute<subVal> subValAttribute = new Attribute<>();
 
-    private enum subVal {
+    public enum subVal {
         INTERMEDIATE_STATE,
         OFF,
         ON,

@@ -18,6 +18,13 @@ import org.example.iec61850.node_parameters.DataObject.status_information.SPS;
 public class XCBR extends LN {
     /**
      * LN: Circuit breaker Name: XCBR (LN: Название автоматического выключателя: XCBR)
+     *
+     * Логические узлы этой группы предоставляют данные, необходимые для представления соответствующего
+     * оборудования распределительного устройства в системе автоматизации. Существует
+     * только два логических узла (XCBR, XSWI), поскольку все отключающие устройства
+     * без тока моделируются XSWI. Каждый логический узел имеет сопутствующие
+     * логические узлы в группах (например, SCBR, SSWI), предоставляющие
+     * подробную информацию о контроле, если это необходимо.
      * */
     /**
      * Descriptions
@@ -42,9 +49,10 @@ public class XCBR extends LN {
      * Controls
      * */
     private SPC LocSta = new SPC();
-    private DPC Pos = new DPC();
-    private SPC BlkOpn = new SPC();
-    private SPC BlkCls = new SPC();
+    private DPC Pos = new DPC(); //Положение выключателя
+    /**Блокировки*/
+    private SPC BlkOpn = new SPC(); //Открытие блока (блокировка на отключение)
+    private SPC BlkCls = new SPC(); //Закрытие блока (блокировка на включение)
     private SPC ChaMotEna = new SPC();
     /**
      * Settings
@@ -53,6 +61,11 @@ public class XCBR extends LN {
 
     @Override
     public void process() {
+        if (Pos.getStValAttribute().getValue().equals(DPC.stVal.OFF) && !BlkOpn.getStVal().getValue()) {
 
+            BlkCls.getStVal().setValue(true);
+        } else {
+            BlkCls.getStVal().setValue(false);
+        }
     }
 }

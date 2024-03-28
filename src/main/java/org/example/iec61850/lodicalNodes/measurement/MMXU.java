@@ -89,7 +89,7 @@ public class MMXU extends LN {
     /**
      * Output
      * */
-    public WYE A = new WYE(); //Изменен модификатор
+    private WYE A = new WYE();
     /**
      * Filter (буферы на каждую фазу)
      * */
