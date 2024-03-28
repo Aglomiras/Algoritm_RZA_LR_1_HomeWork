@@ -43,10 +43,10 @@ public class Fourier extends Filter {
         /**Расчет действительного и мнимого значения*/
         summValRe.setValue(summValRe.getValue() + (newVal - oldVal) *
                 Math.sin(2 * Math.PI * frequency.getValue() * bufferCount.getValue() * samplStep.getValue())
-                * (2 / bufferSize.getValue()));
+                * (2 / this.bufferSize.getValue() + 2 % this.bufferSize.getValue()));
         summValIm.setValue(summValIm.getValue() + (newVal - oldVal) *
                 Math.cos(2 * Math.PI * frequency.getValue() * bufferCount.getValue() * samplStep.getValue())
-                * (2 / bufferSize.getValue()));
+                * (2 / this.bufferSize.getValue() + 2 % this.bufferSize.getValue()));
 
         /**Расчет величины и угла измеряемого вектора*/
         complexMeasurementValue.getInstCVal().getMag().getFloatVal().setValue(

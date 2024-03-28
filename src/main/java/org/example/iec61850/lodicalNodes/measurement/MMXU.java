@@ -98,8 +98,8 @@ public class MMXU extends LN {
     public final Filter ic = new Fourier(bufSize);
     @Override
     public void process() {
-        this.ia.process(this.IaInst, A.getPhsA());
-        this.ia.process(this.IbInst, A.getPhsB());
-        this.ia.process(this.IcInst, A.getPhsC());
+        this.ia.process(this.IaInst, this.A.getPhsA());
+        this.ia.process(this.IbInst, this.A.getPhsB());
+        this.ia.process(this.IcInst, this.A.getPhsC());
     }
 }

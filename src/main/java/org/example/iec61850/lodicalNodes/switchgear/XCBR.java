@@ -59,6 +59,12 @@ public class XCBR extends LN {
      */
     private ING CBTmms = new ING();
 
+    public XCBR() {
+        /**Начальные параметры блокировок*/
+        BlkOpn.getStVal().setValue(false);
+        BlkCls.getStVal().setValue(true);
+    }
+
     @Override
     public void process() {
         if (!Pos.getStValAttribute().getValue().equals(DPC.stVal.OFF) && !BlkOpn.getStVal().getValue()) {

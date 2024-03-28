@@ -14,22 +14,22 @@ import java.util.List;
 
 public class Main {
     private static final List<LN> logicalNode = new ArrayList<>();
-    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
-//    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Конец линии\\";
+//    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
+    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Конец линии\\";
 
     /**
      * Начало линии
      */
 //    private static String name = "PhAB80";
 //    private static String name = "PhA80";
-    private static String name = "PhB20";
+//    private static String name = "PhB20";
 //    private static String name = "PhBC20";
 
     /**
      * Конец линии
      */
 //    private static String name = "PhABC20";
-//    private static String name = "PhABC80";
+    private static String name = "PhABC80";
 //    private static String name = "PhB80";
 //    private static String name = "PhC20";
     public static void main(String[] args) throws Exception {
@@ -44,7 +44,7 @@ public class Main {
         mmxu.IcInst = lsvs.getOut().get(2);
         logicalNode.add(mmxu); //Добавляем узел в лист узлов
 
-        /**I ступень*/
+        /**I ступень: инициализация*/
         PTOC ptoc1 = new PTOC();
         ptoc1.setA(mmxu.getA());
         ptoc1.getStrVal().getSetMag().getFloatVal().setValue(2544.0); //Задание уставки по току
@@ -52,7 +52,7 @@ public class Main {
         ptoc1.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
         logicalNode.add(ptoc1);
 
-        /**II ступень*/
+        /**II ступень: инициализация*/
         PTOC ptoc2 = new PTOC();
         ptoc2.setA(mmxu.getA());
         ptoc2.getStrVal().getSetMag().getFloatVal().setValue(770.0); //Задание уставки по току
@@ -60,7 +60,7 @@ public class Main {
         ptoc2.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
         logicalNode.add(ptoc2);
 
-        /**III ступень*/
+        /**III ступень: инициализация*/
         PTOC ptoc3 = new PTOC();
         ptoc3.setA(mmxu.getA());
         ptoc3.getStrVal().getSetMag().getFloatVal().setValue(420.0); //Задание уставки по току
@@ -68,6 +68,7 @@ public class Main {
         ptoc3.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
         logicalNode.add(ptoc3);
 
+        /**Узел контроля сигналов на отключение*/
         CSWI cswi = new CSWI();
         /**Добавляем информацию о сигнала на отключение оборудования от защит*/
         cswi.getOpOpnList().add(ptoc1.getOp());
@@ -76,14 +77,35 @@ public class Main {
         logicalNode.add(cswi);
 
         XCBR xcbr = new XCBR();
-
+        xcbr.setPos(cswi.getPos());
         logicalNode.add(xcbr);
 
-        NHMI nhmi = new NHMI();
-        nhmi.addSignals("SignalIA", new NHMISignal("ia", mmxu.IaInst.getInstMag().getFloatVal()));
-        nhmi.addSignals("SignalIB", new NHMISignal("ib", mmxu.IbInst.getInstMag().getFloatVal()));
-        nhmi.addSignals("SignalIC", new NHMISignal("ic", mmxu.IcInst.getInstMag().getFloatVal()));
-        logicalNode.add(nhmi);
+        NHMI nhmiMMXU = new NHMI();
+        nhmiMMXU.addSignals("SignalIA", new NHMISignal("ia", mmxu.IaInst.getInstMag().getFloatVal()));
+        nhmiMMXU.addSignals("SignalIB", new NHMISignal("ib", mmxu.IbInst.getInstMag().getFloatVal()));
+        nhmiMMXU.addSignals("SignalIC", new NHMISignal("ic", mmxu.IcInst.getInstMag().getFloatVal()));
+        logicalNode.add(nhmiMMXU);
+
+        NHMI nhmiPTOC = new NHMI();
+        nhmiPTOC.addSignals("The action of the steps: PhsA",
+                new NHMISignal("Phase_A", mmxu.getA().getPhsA().getInstCVal().getMag().getFloatVal()),
+                new NHMISignal("protected_1", ptoc1.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_2", ptoc3.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_3", ptoc2.getStrVal().getSetMag().getFloatVal()));
+        nhmiPTOC.addSignals("The action of the steps: PhsB",
+                new NHMISignal("Phase_B", mmxu.getA().getPhsB().getInstCVal().getMag().getFloatVal()),
+                new NHMISignal("protected_1", ptoc1.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_2", ptoc3.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_3", ptoc2.getStrVal().getSetMag().getFloatVal()));
+        nhmiPTOC.addSignals("The action of the steps: PhsC",
+                new NHMISignal("Phase_C", mmxu.getA().getPhsC().getInstCVal().getMag().getFloatVal()),
+                new NHMISignal("protected_1", ptoc1.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_2", ptoc3.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_3", ptoc2.getStrVal().getSetMag().getFloatVal()));
+        logicalNode.add(nhmiPTOC);
+
+
+
 
         while (lsvs.hasNext()) {
             logicalNode.forEach(LN::process);
