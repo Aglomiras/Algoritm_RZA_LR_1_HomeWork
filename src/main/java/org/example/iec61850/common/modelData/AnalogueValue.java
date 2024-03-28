@@ -12,5 +12,5 @@ public class AnalogueValue extends MyData {
      * FLOATING
      */
     private Attribute<Integer> intVal = new Attribute<>();
-    private Attribute<Float> floatVal = new Attribute<>();
+    private Attribute<Double> floatVal = new Attribute<>();
 }

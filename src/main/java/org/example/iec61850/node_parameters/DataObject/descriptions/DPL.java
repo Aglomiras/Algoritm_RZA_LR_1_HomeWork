@@ -20,7 +20,7 @@ public class DPL extends MyData {
     private Attribute<String> serNum = new Attribute<>();
     private Attribute<String> model = new Attribute<>();
     private Attribute<String> location = new Attribute<>();
-    private Attribute<String> name = new Attribute<>();
+    private Attribute<String> nameDPL = new Attribute<>();
     private Attribute<String> owner = new Attribute<>();
     private Attribute<String> ePSName = new Attribute<>();
     private Attribute<String> primeOper = new Attribute<>();

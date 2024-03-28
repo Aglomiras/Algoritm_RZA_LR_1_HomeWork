@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MyData {
+public abstract class MyData {
     /**
      * Data
      */
