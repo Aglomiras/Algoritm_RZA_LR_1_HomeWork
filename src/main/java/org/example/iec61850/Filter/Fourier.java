@@ -29,7 +29,7 @@ public class Fourier extends Filter {
         for (int i = 0; i < bufsize; i++) {
             MV val = new MV();
             val.getInstMag().getFloatVal().setValue(0.0);
-            buffer[i] = val;
+            this.buffer[i] = val;
         }
     }
 
