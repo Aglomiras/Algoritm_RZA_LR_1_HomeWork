@@ -99,7 +99,7 @@ public class MMXU extends LN {
     @Override
     public void process() {
         this.ia.process(this.IaInst, this.A.getPhsA());
-        this.ia.process(this.IbInst, this.A.getPhsB());
-        this.ia.process(this.IcInst, this.A.getPhsC());
+        this.ib.process(this.IbInst, this.A.getPhsB());
+        this.ic.process(this.IcInst, this.A.getPhsC());
     }
 }

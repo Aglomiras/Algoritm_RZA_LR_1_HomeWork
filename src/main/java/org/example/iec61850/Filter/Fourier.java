@@ -1,5 +1,6 @@
 package org.example.iec61850.Filter;
 
+import lombok.Setter;
 import org.example.iec61850.common.modelData.Attribute;
 import org.example.iec61850.node_parameters.DataObject.CMV;
 import org.example.iec61850.node_parameters.DataObject.measured_and_metered_values.MV;
@@ -43,14 +44,14 @@ public class Fourier extends Filter {
         /**Расчет действительного и мнимого значения*/
         summValRe.setValue(summValRe.getValue() + (newVal - oldVal) *
                 Math.sin(2 * Math.PI * frequency.getValue() * bufferCount.getValue() * samplStep.getValue())
-                * (2 / this.bufferSize.getValue() + 2 % this.bufferSize.getValue()));
+                * (2.0 / this.bufferSize.getValue()));
         summValIm.setValue(summValIm.getValue() + (newVal - oldVal) *
                 Math.cos(2 * Math.PI * frequency.getValue() * bufferCount.getValue() * samplStep.getValue())
-                * (2 / this.bufferSize.getValue() + 2 % this.bufferSize.getValue()));
+                * (2.0 / this.bufferSize.getValue()));
 
         /**Расчет величины и угла измеряемого вектора*/
         complexMeasurementValue.getInstCVal().getMag().getFloatVal().setValue(
-                Math.sqrt(Math.pow(summValRe.getValue(), 2) + Math.pow(summValIm.getValue(), 2)));
+                Math.sqrt((Math.pow(summValRe.getValue(), 2) + Math.pow(summValIm.getValue(), 2)) / 2.0));
         complexMeasurementValue.getInstCVal().getAng().getFloatVal().setValue(
                 Math.atan(summValIm.getValue() / summValRe.getValue()) * (180 / Math.PI)
         );
@@ -60,7 +61,7 @@ public class Fourier extends Filter {
         bufferCount.setValue(bufferCount.getValue() + 1); //Обновление счетчика
 
         /**Проверка полного заполнения буфера*/
-        if (bufferCount.getValue().equals(bufferSize.getValue())) {
+        if (bufferCount.getValue() == bufferSize.getValue()) {
             bufferCount.setValue(0); //Начинаем заново заполнять буфер
         }
     }

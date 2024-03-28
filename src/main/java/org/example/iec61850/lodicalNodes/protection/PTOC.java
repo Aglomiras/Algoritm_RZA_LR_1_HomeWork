@@ -2,6 +2,7 @@ package org.example.iec61850.lodicalNodes.protection;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.iec61850.common.modelData.Attribute;
 import org.example.iec61850.lodicalNodes.LN;
 import org.example.iec61850.node_parameters.DataObject.controls.INC;
 import org.example.iec61850.node_parameters.DataObject.measured_and_metered_values.WYE;
@@ -47,9 +48,6 @@ public class PTOC extends LN {
      * Input
      */
     private WYE A = new WYE();
-
-    /**Уставка по току*/
-//    private double currentSetpoint = StrVal.getSetMag().getFloatVal().getValue();
 
     public PTOC() {
         /**Устанавливаем false: означает, что оборудование еще НЕ отключено*/
@@ -104,6 +102,10 @@ public class PTOC extends LN {
             Op.getPhsA().setValue(true);
             Op.getPhsB().setValue(true);
             Op.getPhsC().setValue(true);
+        } else {
+            Op.getPhsA().setValue(false);
+            Op.getPhsB().setValue(false);
+            Op.getPhsC().setValue(false);
         }
     }
 }

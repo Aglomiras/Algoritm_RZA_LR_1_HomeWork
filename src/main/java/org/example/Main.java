@@ -28,8 +28,8 @@ public class Main {
     /**
      * Конец линии
      */
-//    private static String name = "PhABC20";
-    private static String name = "PhABC80";
+    private static String name = "PhABC20";
+//    private static String name = "PhABC80";
 //    private static String name = "PhB80";
 //    private static String name = "PhC20";
     public static void main(String[] args) throws Exception {
@@ -49,23 +49,23 @@ public class Main {
         ptoc1.setA(mmxu.getA());
         ptoc1.getStrVal().getSetMag().getFloatVal().setValue(2544.0); //Задание уставки по току
         ptoc1.getOpDlOpTmms().getSetVal().setValue(0); //Задание выдержки времени
-        ptoc1.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
+        ptoc1.getTmMult().getSetMag().getFloatVal().setValue(20.0 / 80);
         logicalNode.add(ptoc1);
 
         /**II ступень: инициализация*/
         PTOC ptoc2 = new PTOC();
         ptoc2.setA(mmxu.getA());
         ptoc2.getStrVal().getSetMag().getFloatVal().setValue(770.0); //Задание уставки по току
-        ptoc2.getOpDlOpTmms().getSetVal().setValue(1); //Задание выдержки времени
-        ptoc2.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
+        ptoc2.getOpDlOpTmms().getSetVal().setValue(120); //Задание выдержки времени
+        ptoc2.getTmMult().getSetMag().getFloatVal().setValue(20.0 / 80);
         logicalNode.add(ptoc2);
 
         /**III ступень: инициализация*/
         PTOC ptoc3 = new PTOC();
         ptoc3.setA(mmxu.getA());
         ptoc3.getStrVal().getSetMag().getFloatVal().setValue(420.0); //Задание уставки по току
-        ptoc3.getOpDlOpTmms().getSetVal().setValue(2); //Задание выдержки времени
-        ptoc3.getTmMult().getSetMag().getFloatVal().setValue(0.02 / 80);
+        ptoc3.getOpDlOpTmms().getSetVal().setValue(240); //Задание выдержки времени
+        ptoc3.getTmMult().getSetMag().getFloatVal().setValue(20.0 / 80);
         logicalNode.add(ptoc3);
 
         /**Узел контроля сигналов на отключение*/
@@ -80,31 +80,37 @@ public class Main {
         xcbr.setPos(cswi.getPos());
         logicalNode.add(xcbr);
 
+        /**Вывод самих сигналов всех фаз*/
         NHMI nhmiMMXU = new NHMI();
         nhmiMMXU.addSignals("SignalIA", new NHMISignal("ia", mmxu.IaInst.getInstMag().getFloatVal()));
         nhmiMMXU.addSignals("SignalIB", new NHMISignal("ib", mmxu.IbInst.getInstMag().getFloatVal()));
         nhmiMMXU.addSignals("SignalIC", new NHMISignal("ic", mmxu.IcInst.getInstMag().getFloatVal()));
         logicalNode.add(nhmiMMXU);
 
+        /**Вывод действующих значений фаз и уставок защит*/
         NHMI nhmiPTOC = new NHMI();
         nhmiPTOC.addSignals("The action of the steps: PhsA",
                 new NHMISignal("Phase_A", mmxu.getA().getPhsA().getInstCVal().getMag().getFloatVal()),
                 new NHMISignal("protected_1", ptoc1.getStrVal().getSetMag().getFloatVal()),
-                new NHMISignal("protected_2", ptoc3.getStrVal().getSetMag().getFloatVal()),
-                new NHMISignal("protected_3", ptoc2.getStrVal().getSetMag().getFloatVal()));
+                new NHMISignal("protected_2", ptoc2.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_3", ptoc3.getStrVal().getSetMag().getFloatVal()));
         nhmiPTOC.addSignals("The action of the steps: PhsB",
                 new NHMISignal("Phase_B", mmxu.getA().getPhsB().getInstCVal().getMag().getFloatVal()),
                 new NHMISignal("protected_1", ptoc1.getStrVal().getSetMag().getFloatVal()),
-                new NHMISignal("protected_2", ptoc3.getStrVal().getSetMag().getFloatVal()),
-                new NHMISignal("protected_3", ptoc2.getStrVal().getSetMag().getFloatVal()));
+                new NHMISignal("protected_2", ptoc2.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_3", ptoc3.getStrVal().getSetMag().getFloatVal()));
         nhmiPTOC.addSignals("The action of the steps: PhsC",
                 new NHMISignal("Phase_C", mmxu.getA().getPhsC().getInstCVal().getMag().getFloatVal()),
                 new NHMISignal("protected_1", ptoc1.getStrVal().getSetMag().getFloatVal()),
-                new NHMISignal("protected_2", ptoc3.getStrVal().getSetMag().getFloatVal()),
-                new NHMISignal("protected_3", ptoc2.getStrVal().getSetMag().getFloatVal()));
+                new NHMISignal("protected_2", ptoc2.getStrVal().getSetMag().getFloatVal()),
+                new NHMISignal("protected_3", ptoc3.getStrVal().getSetMag().getFloatVal()));
         logicalNode.add(nhmiPTOC);
 
-
+        NHMI nhmiDigitalSignal = new NHMI();
+        nhmiDigitalSignal.addSignals("Discrete signal: I", new NHMISignal("DS_protected_1", ptoc1.getOp().getGeneral()));
+        nhmiDigitalSignal.addSignals("Discrete signal: II", new NHMISignal("DS_protected_2", ptoc2.getOp().getGeneral()));
+        nhmiDigitalSignal.addSignals("Discrete signal: III", new NHMISignal("DS_protected_3", ptoc3.getOp().getGeneral()));
+        logicalNode.add(nhmiDigitalSignal);
 
 
         while (lsvs.hasNext()) {
