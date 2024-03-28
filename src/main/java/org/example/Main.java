@@ -22,16 +22,13 @@ public class Main {
      */
 //    private static String name = "PhAB80";
 //    private static String name = "PhA80";
-//    private static String name = "PhB20";
-//    private static String name = "PhBC20";
 
     /**
      * Конец линии
      */
-    private static String name = "PhABC20";
 //    private static String name = "PhABC80";
-//    private static String name = "PhB80";
-//    private static String name = "PhC20";
+    private static String name = "PhB80";
+
     public static void main(String[] args) throws Exception {
         LSVS lsvs = new LSVS(); //Создаем узел LSVS
         lsvs.setPath(path);
@@ -107,9 +104,8 @@ public class Main {
         logicalNode.add(nhmiPTOC);
 
         NHMI nhmiDigitalSignal = new NHMI();
-        nhmiDigitalSignal.addSignals("Discrete signal: I", new NHMISignal("DS_protected_1", ptoc1.getOp().getGeneral()));
-        nhmiDigitalSignal.addSignals("Discrete signal: II", new NHMISignal("DS_protected_2", ptoc2.getOp().getGeneral()));
-        nhmiDigitalSignal.addSignals("Discrete signal: III", new NHMISignal("DS_protected_3", ptoc3.getOp().getGeneral()));
+        nhmiDigitalSignal.addSignals("Discrete signal: I", new NHMISignal("DS_protected_1", ptoc2.getOp().getGeneral()));
+
         logicalNode.add(nhmiDigitalSignal);
 
 
