@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.iec61850.lodicalNodes.LN;
 import org.example.iec61850.node_parameters.DataObject.measured_and_metered_values.MV;
-import org.example.iec61850.node_parameters.DataObject.settings.ORG;
-import org.example.iec61850.node_parameters.DataObject.status_information.INS;
-import org.example.iec61850.node_parameters.DataObject.status_information.SPS;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -22,8 +19,6 @@ public class LSVS extends LN {
     private final List<MV> out = new ArrayList<>();
     private List<String> cfgFileList = new ArrayList<>();
     private List<String> csvFileList = new ArrayList<>();
-    //private List<Double> kAList = new ArrayList<>(); //Зачем?
-    //private List<Double> kBList = new ArrayList<>(); //Зачем?
     private int analogSignal = 0;
     private int digitalSignal = 0;
     private Iterator<String> scvIterator;

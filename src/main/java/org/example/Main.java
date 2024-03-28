@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Main {
     private static final List<LN> logicalNode = new ArrayList<>();
-//    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
+    //    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
     private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Конец линии\\";
 
     /**
@@ -103,11 +103,36 @@ public class Main {
                 new NHMISignal("protected_3", ptoc3.getStrVal().getSetMag().getFloatVal()));
         logicalNode.add(nhmiPTOC);
 
-        NHMI nhmiDigitalSignal = new NHMI();
-        nhmiDigitalSignal.addSignals("Discrete signal: I", new NHMISignal("DS_protected_1", ptoc2.getOp().getGeneral()));
+        /**Дискретные сигналы действия всех ступеней защиты для каждой фазы*/
+        /**Phs_A*/
+        NHMI nhmiDS_A = new NHMI();
+        nhmiDS_A.addSignals("Discrete signal PhsA: I",
+                new NHMISignal("DS_protected_1", ptoc1.getOp().getPhsA()));
+        nhmiDS_A.addSignals("Discrete signal PhsA: II",
+                new NHMISignal("DS_protected_2", ptoc2.getOp().getPhsA()));
+        nhmiDS_A.addSignals("Discrete signal PhsA: III",
+                new NHMISignal("DS_protected_3", ptoc3.getOp().getPhsA()));
+        logicalNode.add(nhmiDS_A);
 
-        logicalNode.add(nhmiDigitalSignal);
+        /**Phs_B*/
+        NHMI nhmiDS_B = new NHMI();
+        nhmiDS_B.addSignals("Discrete signal PhsB: I",
+                new NHMISignal("DS_protected_1", ptoc1.getOp().getPhsB()));
+        nhmiDS_B.addSignals("Discrete signal PhsB: II",
+                new NHMISignal("DS_protected_2", ptoc2.getOp().getPhsB()));
+        nhmiDS_B.addSignals("Discrete signal PhsB: III",
+                new NHMISignal("DS_protected_3", ptoc3.getOp().getPhsB()));
+        logicalNode.add(nhmiDS_B);
 
+        /**Phs_C*/
+        NHMI nhmiDS_C = new NHMI();
+        nhmiDS_C.addSignals("Discrete signal PhsC: I",
+                new NHMISignal("DS_protected_1", ptoc1.getOp().getPhsC()));
+        nhmiDS_C.addSignals("Discrete signal PhsC: II",
+                new NHMISignal("DS_protected_2", ptoc2.getOp().getPhsC()));
+        nhmiDS_C.addSignals("Discrete signal PhsC: III",
+                new NHMISignal("DS_protected_3", ptoc3.getOp().getPhsC()));
+        logicalNode.add(nhmiDS_C);
 
         while (lsvs.hasNext()) {
             logicalNode.forEach(LN::process);
