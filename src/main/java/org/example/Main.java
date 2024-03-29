@@ -14,20 +14,20 @@ import java.util.List;
 
 public class Main {
     private static final List<LN> logicalNode = new ArrayList<>();
-    //    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
-    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Конец линии\\";
+        private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Начало линии\\";
+//    private static String path = "C:\\Users\\Aglomiras\\Изображения\\Рабочий стол\\AlgoritmRZAProgrammRealize\\Конец линии\\";
 
     /**
      * Начало линии
      */
 //    private static String name = "PhAB80";
-//    private static String name = "PhA80";
+    private static String name = "PhA80";
 
     /**
      * Конец линии
      */
 //    private static String name = "PhABC80";
-    private static String name = "PhB80";
+//    private static String name = "PhB80";
 
     public static void main(String[] args) throws Exception {
         LSVS lsvs = new LSVS(); //Создаем узел LSVS
@@ -52,7 +52,7 @@ public class Main {
         /**II ступень: инициализация*/
         PTOC ptoc2 = new PTOC();
         ptoc2.setA(mmxu.getA());
-        ptoc2.getStrVal().getSetMag().getFloatVal().setValue(770.0); //Задание уставки по току
+        ptoc2.getStrVal().getSetMag().getFloatVal().setValue(833.3); //Задание уставки по току
         ptoc2.getOpDlOpTmms().getSetVal().setValue(120); //Задание выдержки времени
         ptoc2.getTmMult().getSetMag().getFloatVal().setValue(20.0 / 80);
         logicalNode.add(ptoc2);
@@ -138,6 +138,5 @@ public class Main {
             logicalNode.forEach(LN::process);
             System.out.println();
         }
-
     }
 }
